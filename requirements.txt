@@ -1,0 +1,11 @@
+torch
+transformers
+accelerate
+huggingface_hub>=0.34,<2.0
+requests==2.32.4
+beautifulsoup4
+ddgs
+openai-whisper
+openpyxl
+python-chess
+pandas
