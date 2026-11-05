@@ -132,6 +132,24 @@ def main():
     agent = GAIAAgent()
 
     
+    from file_tools import solve_commutativity_table
+
+    for question in questions:
+        text = question["question"]
+
+        if (
+            "commutative" in text.lower()
+            and "|" in text
+        ):
+            try:
+                results[question["task_id"]] = (
+                    solve_commutativity_table(text)
+                )
+            except Exception as error:
+                print("Table analysis failed:", error)
+
+
+    
     from file_tools import olympic_smallest_team
 
     for question in questions:
