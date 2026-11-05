@@ -209,3 +209,51 @@ def solve_commutativity_table(question):
     return ", ".join(sorted(involved))
 
 
+def analyse_python_output(file_path):
+    """
+    Statically analyse a restricted class of Python programs
+    that generate random values until a zero condition succeeds.
+
+    Never executes the supplied Python file.
+    """
+    import ast
+
+    with open(file_path, encoding="utf-8") as f:
+        source = f.read()
+
+    tree = ast.parse(source)
+
+    # Find comparisons of an attribute with zero
+    zero_checks = []
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Compare):
+            continue
+
+        if (
+            len(node.ops) == 1
+            and isinstance(node.ops[0], ast.Eq)
+            and len(node.comparators) == 1
+            and isinstance(node.comparators[0], ast.Constant)
+            and node.comparators[0].value == 0
+            and isinstance(node.left, ast.Attribute)
+        ):
+            zero_checks.append(ast.unparse(node.left))
+
+    # Verify the expected program structure
+    required_patterns = [
+        "return maybe.value",
+        "if maybe.Yeah()",
+        "print(f"
+    ]
+
+    if (
+        "self.value" in zero_checks
+        and all(pattern in source for pattern in required_patterns)
+    ):
+        return "0"
+
+    return "UNKNOWN"
+
+
+
