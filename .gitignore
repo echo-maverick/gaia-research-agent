@@ -1,0 +1,9 @@
+.env
+.env.*
+__pycache__/
+.ipynb_checkpoints/
+gaia_files/
+gaia_videos/
+gaia_answers_backup.json
+gaia_final_submission.json
+*.token
