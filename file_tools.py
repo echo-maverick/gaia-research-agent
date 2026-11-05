@@ -167,4 +167,45 @@ def find_noncommutative_elements(elements, operation):
 
     return ", ".join(sorted(involved))
 
+def solve_commutativity_table(question):
+    """Find elements in noncommutative pairs from a Markdown table."""
+    import re
+
+    lines = [
+        line.strip()
+        for line in question.splitlines()
+        if line.strip().startswith("|")
+    ]
+
+    rows = []
+    for line in lines:
+        cells = [x.strip() for x in line.strip("|").split("|")]
+
+        if all(re.fullmatch(r":?-+:?", x) for x in cells):
+            continue
+
+        rows.append(cells)
+
+    if len(rows) < 2:
+        raise ValueError("No valid operation table found")
+
+    elements = rows[0][1:]
+
+    if len(rows) != len(elements) + 1:
+        raise ValueError("Incomplete operation table")
+
+    operation = {
+        row[0]: dict(zip(elements, row[1:]))
+        for row in rows[1:]
+    }
+
+    involved = set()
+
+    for a in elements:
+        for b in elements:
+            if operation[a][b] != operation[b][a]:
+                involved.update([a, b])
+
+    return ", ".join(sorted(involved))
+
 
