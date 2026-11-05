@@ -50,6 +50,13 @@ def process_attachment(question, path):
     filename = question.get("file_name", "").lower()
     text = question["question"].lower()
 
+    
+    if filename.endswith(".py"):
+        from file_tools import analyse_python_output
+        return analyse_python_output(path)
+
+
+
     if filename.endswith(".mp3"):
         transcript = transcribe_audio(path)
 
