@@ -155,3 +155,16 @@ def olympic_smallest_team(url):
 
     raise ValueError("Participation table not found")
 
+
+def find_noncommutative_elements(elements, operation):
+    """Return elements involved in noncommutative pairs."""
+    involved = set()
+
+    for a in elements:
+        for b in elements:
+            if operation[a][b] != operation[b][a]:
+                involved.update((a, b))
+
+    return ", ".join(sorted(involved))
+
+
