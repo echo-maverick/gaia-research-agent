@@ -131,3 +131,27 @@ def calculate_food_sales(file_path):
         workbook.close()
 
     return f"${total:,.2f}"
+    
+def olympic_smallest_team(url):
+    """Find the smallest participating team, breaking ties by country name."""
+    import requests
+    import pandas as pd
+    from io import StringIO
+
+    response = requests.get(url, timeout=30)
+    response.raise_for_status()
+
+    tables = pd.read_html(StringIO(response.text))
+
+    for table in tables:
+        if {"Country", "Total"}.issubset(table.columns):
+            data = table.copy()
+            data["Total"] = pd.to_numeric(
+                data["Total"], errors="coerce"
+            )
+            data = data.dropna(subset=["Country", "Total"])
+            ranked = data.sort_values(["Total", "Country"])
+            return str(ranked.iloc[0, 0])
+
+    raise ValueError("Participation table not found")
+
